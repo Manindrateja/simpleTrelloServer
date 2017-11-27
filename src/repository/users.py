@@ -87,12 +87,12 @@ def createList(name, boardId):
 	board.save()
 	return new_list.transform()
 
-def getListById(id):
+def getListById(id, error = True):
 	listItem = List.objects(id = id).first()
 	if listItem:
 		return listItem
 	else:
-		raise CustomException("No list exists")
+		raise CustomException("No list exists") if error else None
 
 def createTask(task, token, listId):
 	task['assignedTo'] = findUser(task['assignedTo'])
@@ -205,3 +205,44 @@ def deleteList(listId, boardId):
 		return List.objects.filter(id = listId).delete()
 	else:
 		return "error"
+
+def sortList(boardId, lists):
+	board = Board.objects.filter(id = boardId).first()	
+	if board:
+		board.lists = [];
+		for item in lists:
+			itemD = getListById(item, error = False)
+			if itemD:
+				board.lists.append(itemD)
+		board.save()
+		return "success"
+	else: 
+		return "error"
+
+def sortTasklist(listId, tasklists):
+	targetLists = List.objects.filter( id = listId).first()
+	if targetLists:
+		targetLists.tasklists = [];
+		# targetLists.tasklists = Task.objects.filter(id__in = tasklists).all()
+		for item in tasklists:
+			task = Task.objects.filter(id = item).first()
+			if task:
+				targetLists.tasklists.append(task)
+		targetLists.save()
+		return "success"
+	else:
+		raise CustomException("Cannot Save the sort")
+
+# def moveSortTask(froml, to):
+# 	sortTasklist(froml['id'], froml['tasklists']);
+# 	sortTasklist(to['id'], to['tasklists']);
+# 	return "success"
+
+def moveSortTask(fromlistId, to, taskId):
+	task = getTaskbyId(taskId)
+	if List.objects(id = fromlistId).update_one(pull__tasklists = task):
+		sortTasklist(to['id'], to['tasklists']);
+		return "success"
+	else:
+		raise CustomException("Cannot Save the sort")
+

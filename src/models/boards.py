@@ -3,7 +3,7 @@ from users import User
 
 class Task(Base):
 	name = db.StringField(required = True)
-	title = db.StringField(required = True)
+	# title = db.StringField(required = True)
 	createdBy = db.ReferenceField(User)
 	assignedTo = db.ReferenceField(User)
 	description = db.StringField()

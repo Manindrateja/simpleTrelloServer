@@ -41,7 +41,7 @@ def getBoard(boardId):
 def createTask():
 	task = {}
 	task['name'] = request.json.get('name')
-	task['title'] = request.json.get('title')
+	# task['title'] = request.json.get('title')
 	task['assignedTo'] = request.json.get('assignedTo')
 	task['description'] = request.json.get('description')
 	task = users.createTask(task, request.headers.get('token'), request.json.get('listId'))
@@ -52,7 +52,7 @@ def updateTask():
 	task = {}
 	task['id'] = request.json.get('id')
 	task['name'] = request.json.get('name')
-	task['title'] = request.json.get('title')
+	# task['title'] = request.json.get('title')
 	task['assignedTo'] = request.json.get('assignedTo')
 	task['description'] = request.json.get('description')
 	task['orderNumber'] = request.json.get('orderNumber')
@@ -94,3 +94,21 @@ def deleteTask():
 def deleteList():
 	return jsonify(users.deleteList(request.json.get('listId'), request.json.get('boardId')))
 
+@board_api.route('/sortList', methods = ['POST'])
+def sortList():
+	if users.sortList(request.json.get('boardId'),request.json.get('lists')):
+		return jsonify('success')
+	return 'error'
+
+@board_api.route('/sortTask', methods = ['POST'])
+def sortTasklist():
+	if users.sortTasklist(request.json.get('listId'),request.json.get('tasklists')):
+		return jsonify('success')
+	return 'error'
+
+@board_api.route('/moveSortTask', methods = ['POST'])
+def moveSortTask():
+	if users.moveSortTask(request.json.get('fromlistId'),request.json.get('to'),request.json.get('id')):
+		return jsonify('success')
+	return 'error'
+	
