@@ -15,11 +15,11 @@ class Base(db.Document):
     def __init__(self, *args, **kwargs):
         super(Base, self).__init__(*args, **kwargs)
     
-    # def save(self, *args, **kwargs):
-    #     if not self.createdAt:
-    #         self.createdAt = datetime.now()
-    #     self.updatedAt = datetime.now()
-    #     return super(Base, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        if not self.createdAt:
+            self.createdAt = datetime.now()
+        self.updatedAt = datetime.now()
+        return super(Base, self).save(*args, **kwargs)
 
     def get_id(self):
         return self.id.__str__()

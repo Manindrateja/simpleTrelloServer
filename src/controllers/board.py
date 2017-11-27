@@ -4,6 +4,7 @@ from flask import jsonify, Blueprint, redirect, url_for, request, render_templat
 
 from src.repository import users
 
+
 board_api = Blueprint('board', __name__)
 
 @board_api.route('/createBoard', methods = ['POST'])
@@ -102,13 +103,13 @@ def sortList():
 
 @board_api.route('/sortTask', methods = ['POST'])
 def sortTasklist():
-	if users.sortTasklist(request.json.get('listId'),request.json.get('tasklists')):
+	if users.sortTasklist(request.json.get('listId'),request.json.get('tasklists'),request.json.get('boardId')):
 		return jsonify('success')
 	return 'error'
 
 @board_api.route('/moveSortTask', methods = ['POST'])
 def moveSortTask():
-	if users.moveSortTask(request.json.get('fromlistId'),request.json.get('to'),request.json.get('id')):
+	if users.moveSortTask(request.json.get('fromlistId'),request.json.get('to'),request.json.get('id'),request.json.get('boardId')):
 		return jsonify('success')
 	return 'error'
 	
@@ -117,3 +118,8 @@ def saveBoard():
 	if users.saveBoard(request.json.get('id'), request.json.get('lists'), request.json.get('listIds')):
 		return jsonify('success')
 	return 'error'
+
+@board_api.route('/checkBoardChange', methods = ['POST', 'GET'])
+def checkBoardChange():
+	return jsonify(users.checkBoardChange(request.json))
+

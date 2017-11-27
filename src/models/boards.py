@@ -1,5 +1,6 @@
 from base import Base,db
 from users import User
+from datetime import datetime
 
 class Task(Base):
 	name = db.StringField(required = True)
@@ -55,8 +56,14 @@ class Board(Base):
 			'isShared': self.isShared,
 			'members': self.members,
 			'lists': self.lists,
-			'id': self.get_id()
+			'id': self.get_id(),
+			'createdAt': self.createdAt,
+    		'updatedAt': self.updatedAt,
+    		'timeStamp': self.get_updatedAt()
 		}
+
+	def get_updatedAt(self):
+		return (self.updatedAt - datetime(1970, 1, 1)).total_seconds()
 
 	def get_meta(self):
 		return{
@@ -72,5 +79,8 @@ class Board(Base):
 			'isShared': self.isShared,
 			'members': [member.transform() for member in self.members],
 			'lists': [item.getAll() for item in self.lists],
-			'id': self.get_id()
+			'id': self.get_id(),
+			'createdAt': self.createdAt,
+    		'updatedAt': self.updatedAt,
+    		'timeStamp': self.get_updatedAt()
 		}	

@@ -5,3 +5,5 @@ MONGODB_SETTINGS = {
         'username': '',
         'password': ''
     }
+
+SECRET_KEY = 'Testkey'

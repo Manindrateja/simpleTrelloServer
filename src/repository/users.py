@@ -176,8 +176,10 @@ def addMember(boardId, userId):
 
 def removeMember(boardId, userId):
 	# board = getBoardById(boardId)
+	board = Board.objects.filter( id = boardId).first()
 	user = findUser(userId)
 	if Board.objects(id = boardId).update_one(pull__members = user):
+		board.save()
 		return "success"
 
 	return "error"
@@ -219,8 +221,9 @@ def sortList(boardId, lists):
 	else: 
 		return "error"
 
-def sortTasklist(listId, tasklists):
+def sortTasklist(listId, tasklists, boardId):
 	targetLists = List.objects.filter( id = listId).first()
+	board = Board.objects.filter(id = boardId).first();
 	if targetLists:
 		targetLists.tasklists = [];
 		# targetLists.tasklists = Task.objects.filter(id__in = tasklists).all()
@@ -229,6 +232,7 @@ def sortTasklist(listId, tasklists):
 			if task:
 				targetLists.tasklists.append(task)
 		targetLists.save()
+		board.save()
 		return "success"
 	else:
 		raise CustomException("Cannot Save the sort")
@@ -238,10 +242,12 @@ def sortTasklist(listId, tasklists):
 # 	sortTasklist(to['id'], to['tasklists']);
 # 	return "success"
 
-def moveSortTask(fromlistId, to, taskId):
+def moveSortTask(fromlistId, to, taskId, boardId):
 	task = getTaskbyId(taskId)
+	board = Board.objects.filter(id = boardId).first();
 	if List.objects(id = fromlistId).update_one(pull__tasklists = task):
-		sortTasklist(to['id'], to['tasklists']);
+		sortTasklist(to['id'], to['tasklists'], boardId);
+		board.save()
 		return "success"
 	else:
 		raise CustomException("Cannot Save the sort")
@@ -250,6 +256,15 @@ def saveBoard(boardId, lists, listIds):
 	sortList(boardId, listIds)
 	for item in lists:
 		print item['id']
-		sortTasklist(item['id'],item['tasklists'])
+		sortTasklist(item['id'],item['tasklists'], boardId)
+
 	return "success"	
 
+def checkBoardChange(data):
+	# print data
+	board = Board.objects.filter(id = data['boardId']).first();
+	# print data['time']
+	# print board.get_updatedAt()
+	if round(float(data['time'])) == round(float(board.get_updatedAt())):
+		return "0"
+	return "1"
