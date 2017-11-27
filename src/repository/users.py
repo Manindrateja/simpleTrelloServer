@@ -246,3 +246,10 @@ def moveSortTask(fromlistId, to, taskId):
 	else:
 		raise CustomException("Cannot Save the sort")
 
+def saveBoard(boardId, lists, listIds):
+	sortList(boardId, listIds)
+	for item in lists:
+		print item['id']
+		sortTasklist(item['id'],item['tasklists'])
+	return "success"	
+

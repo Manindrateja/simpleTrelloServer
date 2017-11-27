@@ -112,3 +112,8 @@ def moveSortTask():
 		return jsonify('success')
 	return 'error'
 	
+@board_api.route('/saveBoard', methods = ['POST'])
+def saveBoard():
+	if users.saveBoard(request.json.get('id'), request.json.get('lists'), request.json.get('listIds')):
+		return jsonify('success')
+	return 'error'
