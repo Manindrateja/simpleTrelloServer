@@ -14,11 +14,12 @@ class Task(Base):
 		return{
 			'id' : self.get_id(),
 			'name': self.name, 
-			# 'title': self.title,
-			# 'createdBy': self.createdBy.transform(),
-			# 'assignedTo': self.assignedTo.transform(), 
-			# 'description': self.description,
-			'orderNumber': self.orderNumber
+			'createdBy': self.createdBy.transform(),
+			'assignedTo': self.assignedTo.transform(), 
+			'description': self.description,
+			'orderNumber': self.orderNumber,
+			'createdAt': self.createdAt,
+    		'updatedAt': self.updatedAt
 		}
 
 class List(Base):

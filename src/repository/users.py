@@ -192,9 +192,11 @@ def deleteBoard(boardId, token):
 	else:
 		return "error"
 
-def deleteTask(taskId, listId):
+def deleteTask(taskId, listId, boardId):
+	board = Board.objects.filter(id = boardId).first()
 	task = getTaskbyId(taskId)
 	if List.objects(id = listId).update_one(pull__tasklists = task):
+		board.save()
 		return Task.objects.filter(id = taskId).delete()
 	else:
 		return "error"

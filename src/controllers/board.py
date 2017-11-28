@@ -50,16 +50,8 @@ def createTask():
 
 @board_api.route('/updateTask', methods = ['POST', 'PUT'])
 def updateTask():
-	task = {}
-	task['id'] = request.json.get('id')
-	task['name'] = request.json.get('name')
-	# task['title'] = request.json.get('title')
-	task['assignedTo'] = request.json.get('assignedTo')
-	task['description'] = request.json.get('description')
-	task['orderNumber'] = request.json.get('orderNumber')
-	task = users.updateTask(task, request.headers.get('token'))
+	task = users.updateTask(request.json, request.headers.get('token'))
 	return jsonify(task)
-
 
 @board_api.route('/reorderTask', methods = ['POST', 'PUT'])
 def reOrderTasks():
@@ -89,7 +81,7 @@ def deleteBoard():
 
 @board_api.route('/deleteTask', methods = ['POST'])
 def deleteTask():
-	return jsonify(users.deleteTask(request.json.get('taskId'), request.json.get('listId')))
+	return jsonify(users.deleteTask(request.json.get('taskId'), request.json.get('listId'), request.json.get('boardId')))
 
 @board_api.route('/deleteList', methods = ['POST'])
 def deleteList():
